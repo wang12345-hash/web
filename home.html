@@ -292,7 +292,6 @@
                             // 全局滚轮拦截器（捕获阶段）
                             const handleGlobalWheel = (e) => {
                                 if (isMouseInsideLabel) {
-                                    e.preventDefault();
                                     e.stopPropagation();
                                 }
                             };
