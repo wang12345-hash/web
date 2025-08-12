@@ -1,0 +1,179 @@
+// 断点配置表
+$breakpoints: (
+    xxl: 1921px,                  // 超大屏（1921px以上）
+    xl: (1601px, 1920px),         // 大屏（1601-1920px）
+    l: (1401px, 1600px),          // 中大屏（1401-1600px）
+    m: (1024px, 1400px),          // 中屏（1024-1400px）
+    s: (769px, 1024px),           // 小屏（769-1024px）
+    xs: 768px                      // 超小屏（768px以下）
+) !default;
+
+/**
+ * 响应式媒体查询混合宏
+ * @param $breakpoint - 断点名称（对应配置表中的key）
+ * @param $min - 是否启用最小宽度查询（默认null）
+ */
+@mixin respond-to($breakpoint, $min: null) {
+    $value: map-get($breakpoints, $breakpoint);
+    
+    @if type-of($value) == 'list' {
+        @if $min == null {
+            // 仅最大宽度查询
+            @media (max-width: nth($value, 2)) { @content; }
+        } @else {
+            // 范围查询
+            @media (min-width: nth($value, 1)) and (max-width: nth($value, 2)) { @content; }
+        }
+    } @else {
+        @if $breakpoint == 'xxl' {
+            // 超大屏特殊处理（只设min-width）
+            @media (min-width: $value) { @content; }
+        } @else {
+            // 普通最大宽度查询
+            @media (max-width: $value) { @content; }
+        }
+    }
+}
+
+/**
+ * 浏览器前缀处理混合宏
+ * @param $property - CSS属性名
+ * @param $value - 属性值
+ */
+@mixin prefix($property, $value) {
+    -webkit-#{$property}: $value;
+    -moz-#{$property}: $value;
+    -ms-#{$property}: $value;
+    #{$property}: $value;
+}
+
+/**
+ * Grid布局混合宏
+ * @param $columns - 列定义
+ * @param $rows - 行定义
+ * @param $gap - 间距（可选）
+ */
+@mixin grid-layout($columns, $rows, $gap: null) {
+    display: block;
+    
+    @supports (display: grid) {
+        display: grid;
+        grid-template-columns: $columns;
+        grid-template-rows: $rows;
+
+        @media all and (-ms-high-contrast: none){
+            display: -ms-grid;
+            -ms-grid-columns: $columns;
+            -ms-grid-rows: $rows;
+        }
+        
+        @if $gap != null {
+            gap: $gap;  // 标准属性（推荐）
+            // 兼容老版本写法
+            @include prefix(row-gap, $gap);
+            @include prefix(column-gap, $gap);
+            
+            @media all and (-ms-high-contrast: none) {
+                & > * {
+                    margin: calc($gap / 2);
+                }
+            }
+        }
+    }
+    
+    @content;
+}
+
+/**
+ * 宽高设置混合宏
+ * @param $width - 宽度（默认100%）
+ * @param $height - 高度（默认等于宽度）
+ */
+@mixin size($width: 100%, $height: $width) {
+    width: $width;
+    height: $height;
+}
+
+/**
+ * 文字描边效果
+ * @param $color - 描边颜色（默认#fff）
+ * @param $size - 描边粗细（默认1px）
+ * @param $use-native - 是否使用原生text-stroke（默认false）
+ */
+@mixin text-stroke($color: #fff, $size: 1px, $use-native: false) {
+    @if $use-native {
+        // 现代标准写法
+        @supports (-webkit-text-stroke: 1px #fff) or (text-stroke: 1px #fff) {
+            -webkit-text-stroke: $size $color;
+            text-stroke: $size $color;
+            paint-order: stroke fill; // 控制绘制顺序
+        }
+        @supports not (-webkit-text-stroke: 1px #fff) {
+            @include text-stroke-fallback($color, $size);
+        }
+    } @else {
+        @include text-stroke-fallback($color, $size);
+    }
+}
+
+@mixin text-stroke-fallback($color, $size) {
+    $shadow: ();
+    @for $i from -2 through 2 {
+        @for $j from -2 through 2 {
+            $shadow: append($shadow, #{$i*$size} #{$j*$size} 0 $color, comma);
+        }
+    }
+    text-shadow: $shadow;
+}
+
+/**
+ * 动画属性设置混合宏
+ * @param $settings - 动画参数map
+ */
+@mixin animate($settings) {
+    $property-map: (
+        'name': 'animation-name',
+        'speed': 'animation-duration',
+        'path': 'animation-timing-function',
+        'mode': 'animation-fill-mode',
+        'delay': 'animation-delay',
+        'count': 'animation-iteration-count',
+        'flip': 'animation-direction',
+        'status': 'animation-play-state'
+    );
+    
+    @each $key, $value in $settings {
+        @if map-has-key($property-map, $key) {
+            $css-prop: map-get($property-map, $key);
+            @include prefix($css-prop, $value);
+        } @else {
+            @warn "无效的动画属性: #{$key}";
+        }
+    }
+}
+
+/**
+ * 过渡动画混合宏
+ * @param $properties - 需要过渡的属性列表
+ * @param $duration - 持续时间（默认0.3s）
+ * @param $timing - 时间函数（默认ease）
+ * @param $delay - 延迟时间（默认0s）
+ */
+@mixin transition(
+    $properties: (),
+    $duration: 0.3s,
+    $timing: ease,
+    $delay: 0s
+) {
+    $transitions: ();
+    
+    @each $prop in $properties {
+        $transitions: append(
+            $transitions, 
+            #{$prop} #{$duration} #{$timing} #{$delay}, 
+            comma
+        );
+    }
+    
+    @include prefix(transition, $transitions);
+}

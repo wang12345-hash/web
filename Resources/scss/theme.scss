@@ -1,0 +1,25 @@
+$themes:(
+    default:(
+        colorffffff: #ffffff,
+        colorffffff50:rgba(255,255,255,0.5),
+        color333333: #333333,
+        color007ce9: #007ce9
+    ),
+);
+
+@mixin themify(){
+    @each $theme, $map in $themes {
+        .theme-#{$theme} & {
+        $theme-map: () !global;
+            @each $key, $value in $map {
+                $theme-map: map-merge($theme-map, ($key: $value)) !global;
+            }
+            @content;
+            $theme-map: null !global;
+        }
+    }
+}
+
+@function themed($key){
+    @return map-get($theme-map,$key);
+}

@@ -1,0 +1,156 @@
+{
+    "author":"Mr. Wang",
+    "create":"2025-04-23",
+    "version":"0.0.1",
+    "brief":"记录工作点滴，开心时光每刻。",
+    "name":["test","Admin","xiaowang"],
+    "nameMD5":["D9ED234F3905298F2A77A8E16D06E78B","AF83F787E8911DEA9B3BF677746EBAC9"],
+	"password":["7sK@9m","123"],
+    "passwordMD5":["C0BC5008C39C5EDD17EC2E931B89615D","303F3F9B6DFA59367CF07D45C8946439"],
+    "log":[{
+        "name":"网站更新日志",
+        "id":"log-1",
+        "data":[{
+            "version":"0.0.1",
+            "text":"项目落地，开始实现",
+            "date":"2025-04-23",
+            "id":"log-1-1"
+        }]
+    },{
+        "name":"JS工具库更新日志",
+        "id":"log-2",
+        "data":[{
+            "version":"0.0.1",
+            "text":"升级JSModel为普通函数",
+            "data":"2025-04-23",
+            "id":"log-2-1"
+        },{
+			"version":"0.0.2",
+			"text":"更新createSvg方法，支持一个svg里面创建多个path和color配对",
+			"data":"2025-06-09",
+			"id":"log-2-2"
+		},{
+			"version":"0.1.0",
+			"text":"新增draggable、rightClick方法，分别是拖拽排序及自定义右键菜单方法",
+			"data":"2025-07-02",
+			"id":"log-2-3"
+		},{
+			"version":"0.1.1",
+			"text":"更新random方法，支持第二参数传入guid，然后随机返回一个guid，如果第二个参数为guid，那这个函数的第一个参数将不在生效",
+			"data":"2025-07-03",
+			"id":"log-2-4"
+		},{
+            "version":"0.2.0",
+            "text":"新增：scrollPager（滚轮切页）、draggable（拖拽排序）方法。",
+            "data":"2025-08-08",
+            "id":"log-2-5"
+        },{
+            "version":"0.2.1",
+            "text":"新增：getDateDiff（计算指定日期到今天的时间差）",
+            "data":"2025-08-12",
+            "id":"log-2-6"
+        }]
+    }],
+    "introductionMenu":[{
+        "title":"基本信息",
+        "english":"BasicInfo",
+        "id":"introductionMenu-1",
+        "attr":"BasicInfo"
+    },{
+        "title":"与我相关",
+        "english":"RelatedMe",
+        "id":"introductionMenu-2",
+        "attr":"RelatedMe"
+    },{
+        "title":"技能展示",
+        "english":"Skills",
+        "id":"introductionMenu-3",
+        "attr":"Skills"
+    },{
+        "title":"个人经历",
+        "english":"Past",
+        "id":"introductionMenu-4",
+        "attr":"Past"
+    },{
+        "title":"自我评价",
+        "english":"evaluate",
+        "id":"introductionMenu-5",
+        "attr":"evaluate"
+    },{
+        "title":"联系方式",
+        "english":"Contact",
+        "id":"introductionMenu-6",
+        "attr":"Contact"
+    }],
+    "introductionBanner":["banner1.jpg","banner2.jpg","banner3.jpg","banner4.jpg"],
+    "authorInfo":{
+        "title":"小王的网站",
+        "occupation":"前端开发",
+        "yearsService":"2021-04-06"
+    },
+    "skills":{
+        "html":80,
+        "javaScript":75,
+        "css":80,
+        "jQuery":60,
+        "scss":60,
+        "vue":65,
+        "react":50,
+        "echarts":80,
+        "c":20,
+        "nodeJs":40
+    },
+    "aboutMe":{
+        "menuIcom":"Me.jpg",
+        "data":[{
+            "title":"家乡风光",
+            "id":"aboutMe1_1",
+            "html":[
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">家乡的风光，是我心灵深处最美的画卷。每当我想起那片熟悉的土地，心中总会涌现出一股暖流，那是对家乡深深的眷恋和无尽的思念。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/1-1.jpg\" style=\"width:50%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">我的家乡坐落在江南水乡，是一个美丽而宁静的小村庄。清晨，当第一缕阳光洒落在村庄里，金黄色的光芒与袅袅的炊烟交织在一起，形成一幅宁静而温馨的画面。村庄四周环绕着青葱的稻田和碧绿的菜地，微风吹过，稻田中的稻穗轻轻摇曳，仿佛在向人们展示它们的丰收。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/1-2.jpg\" style=\"width:50%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">每当夏天来临，家乡的小河便成了我们孩子们的天堂。河水清澈见底，河底的小鱼小虾在水中欢快地游弋。我们会在河边嬉戏，捡起河边的鹅卵石，扔进水中，看着水面荡起一圈圈涟漪。傍晚时分，夕阳的余晖洒在河面上，整个小河都被染成了金黄色，美得让人心醉。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/1-3.jpg\" style=\"width:48%;\" />",
+                    "<img src=\"./Resources/img/home/1-4.jpg\" style=\"width:48%;margin-left: 2%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">家乡的人们热情好客，每当有客人来访，他们总会拿出自家种的蔬菜、养的鸡鸭，热情地招待客人。在这里，你可以感受到浓浓的乡土气息和淳朴的民风。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/1-5.jpg\" style=\"width:48%;\" />",
+                    "<img src=\"./Resources/img/home/1-6.jpg\" style=\"width:48%;margin-left: 2%;\" />",
+                "</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/1-7.jpg\" style=\"width:50%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">如今，我已经离开家乡多年，但家乡的风光依然历历在目。每当我回到家乡，看到那片熟悉的土地和那片宁静的村庄，心中的那份眷恋和思念便会更加强烈。家乡的风光，将永远留在我的心中，成为我生命中最美的风景。</p>"
+            ]
+        },{
+            "title":"关于本人",
+            "id":"aboutMe1_2",
+            "html":[
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">在这个世界上，没有两片完全相同的叶子，也没有两个完全相同的人。我，一个独一无二的存在，有着自己独特的性格、兴趣和梦想。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/2-1.jpg\" style=\"width:50%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">我热爱生活，对周围的一切充满好奇。我喜欢探索未知的世界，无论是自然界的奥秘还是人文的深厚。这种好奇心驱使我不断学习，不断成长。</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">我有一颗善良的心，总是愿意帮助他人。我相信，每一个微笑、每一句鼓励的话都可以为他人带来温暖和力量。我乐于在他人需要时伸出援手，因为我相信，这个世界需要更多的爱和关怀。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/2-2.jpg\" style=\"width:50%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">我热爱自己的工作，作为一名前端工程师，我致力于为用户带来更好的体验。我喜欢挑战自己，不断学习新的技术，将复杂的逻辑和美观的界面完美结合。每当我看到一个精心设计的界面得到用户的认可，我都会感到无比的满足和自豪。</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">我还有很多梦想，希望有一天能够环游世界，感受不同文化的魅力；希望能够在自己的领域里取得更高的成就，为社会做出更大的贡献。我知道，这些梦想需要付出努力和时间，但我愿意为之奋斗。</p>",
+                "<p style=\"margin: 10px 0;text-align: center;\">",
+                    "<img src=\"./Resources/img/home/2-3.jpg\" style=\"width:48%;\" />",
+                    "<img src=\"./Resources/img/home/2-4.jpg\" style=\"width:48%;margin-left: 2%;\" />",
+                "</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">我热爱自己的工作，作为一名前端工程师，我致力于为用户带来更好的体验。我喜欢挑战自己，不断学习新的技术，将复杂的逻辑和美观的界面完美结合。每当我看到一个精心设计的界面得到用户的认可，我都会感到无比的满足和自豪。</p>",
+                "<p style=\"text-indent: 22pt;line-height:30px;font-size: 20px;\">这就是我，一个热爱生活、乐于助人、热爱工作并充满梦想的人。我相信，只要我保持对生活的热爱和追求，未来的路一定会更加宽广和精彩。</p>"
+            ]
+        }]
+    }
+}

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>主页</title>
+    <script src="./Resources/js/main.js"></script>
+    <script src="./Resources/lib/swiper/swiper-bundle.min.js"></script>
+    <script src="./Resources/lib/wsx/land.js"></script>
+    <script src="./Resources/js/app.js"></script>
+    <link rel="stylesheet" href="./Resources/css/reset.min.css">
+    <link rel="stylesheet" href="./Resources/css/common.min.css">
+    <link rel="stylesheet" href="./Resources/lib/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="./Resources/css/home.min.css">
+</head>
+<body class="theme-default">
+	<div class="app">
+        <header class="header rowBetweenCenter">
+            <img src="./Resources/img/icon/logo.png" alt="暂无图片" loading="lazy">
+            <div class="rowStartCenter" id="menu"></div>
+        </header>
+        <main class="main">
+            <section class="section" data-id="BasicInfo">
+                <div class="swiper BasicInfo">
+                    <div class="swiper-wrapper"></div>
+                </div>
+                <div class="swiper-content">
+                    <div class="rowCenterCenter p-b-8">
+                        <div class="me">
+                            <img src="./Resources/img/me/7487d9641b44aa4e5813d2a6759373d4.jpg" alt="暂无图片">
+                        </div>
+                    </div>
+                    <div class="userTitle font-32 lineHeight-48"></div>
+                    <div class="occupation font-32 lineHeight-48"></div>
+                    <div class="yearsService font-32 lineHeight-48"></div>
+                    <div class="content-title font-32 lineHeight-48"></div>
+                </div>
+                <div class="swiper-navigate rowCenterCenter"></div>
+            </section>
+            <section class="section RelatedMe" data-id="RelatedMe">
+                <div class="layr1"></div>
+                <div class="layr2"></div>
+                <div class="layr3"></div>
+                <div class="layr4"></div>
+                <div class="layr5"></div>
+                <div class="label"></div>
+                <div class="userMe"></div>
+                <div class="getBack rowCenterCenter font-32">返回</div>
+            </section>
+            <section class="section Skills" data-id="Skills">
+                <canvas id="Skills"></canvas>
+            </section>
+            <section class="section" data-id="Past">4</section>
+            <section class="section" data-id="evaluate">5</section>
+            <section class="section" data-id="Contact">6</section>
+        </main>
+    </div>
+    <script>
+        var windowScroll = null;
+        var isMouseOverLabel = false;
+        window.addEventListener("DOMContentLoaded",function(){
+            initialize(".app").then(function(){
+                load();
+            }).catch(function(error){
+                alert(error);
+            })
+        });
+
+        function load(){
+            // 获取数据
+            ajax("get","./Resources/json/data.json").then(function(data){
+                windowScroll = scrollPager(".main",{
+                    infinite:false,
+                    duration:1000,
+                    afterChange:function(index){
+                        return new Promise(function(resolve, reject){
+                            console.log(1);
+                        })
+                    }
+                });
+                createMenuData(data.introductionMenu);
+                bindBanner(data.introductionBanner,data.authorInfo);
+                canvasDrawLine();
+                bindRelatedMe(data.aboutMe.data);
+            }).catch(function(error){
+                alert(error);
+            })
+        };
+
+        // 菜单
+        function createMenuData(Data){
+            document.querySelector("#menu").innerHTML = "";
+            var DOM = document.createDocumentFragment();
+            for(let i = 0; i < Data.length; i ++){
+                var a = createTag("a",[["href","JavaScript: void 0;"],["class","font-18"],["data-target",Data[i].attr]]);
+                var box = createTag('div',[['class','pointer text-center']]);
+                var zh = createTag('div',[['class','lineHeight-32']],Data[i].title);
+                var en = createTag('div',[['class','lineHeight-32']],Data[i].english);
+                box.appendChild(zh);
+                box.appendChild(en);
+                a.appendChild(box);
+                DOM.appendChild(a);
+                a.addEventListener("click",function(e){
+                    e.preventDefault();
+                    const targetID = this.getAttribute("data-target");
+                    const targetSection = document.querySelector('[data-id="'+targetID+'"]');
+                    if(targetSection) {
+                        windowScroll.scrollTo(i);
+                    }
+                })
+            };
+            document.querySelector("#menu").appendChild(DOM);
+        };
+
+        // banner区域数据绑定
+        function bindBanner(banner,info){
+            document.querySelector(".BasicInfo>.swiper-wrapper").innerHTML = "";
+            var DOM = document.createDocumentFragment();
+            for(var i = 0; i < banner.length; i ++) {
+                var div = createTag("div",[["class","swiper-slide"],["style","background-image: url(./Resources/img/home/"+banner[i]+");"]]);
+                DOM.appendChild(div);
+            };
+            document.querySelector(".BasicInfo>.swiper-wrapper").appendChild(DOM);
+            new Swiper(".BasicInfo",{
+                loop:true,
+                autoplay:{
+                    delay:12500,
+                    stopOnLastSlide:false,
+                    disableOnInteraction:true
+                },
+                pagination:{
+                    el:".swiper-navigate",
+                    clickable:true
+                }
+            });
+            const cacheKey = 'hitokoto_cache';
+            const today = new Date().toDateString();
+            const cachedData = localStorage.getItem(cacheKey);
+            document.querySelector(".userTitle").textContent = info.title;
+            document.querySelector(".occupation").textContent = info.occupation;
+            document.querySelector(".yearsService").textContent = getDateDiff(info.yearsService,'day') + "天";
+            if (cachedData) {
+                const { date, data } = JSON.parse(cachedData);
+                if (date === today) {
+                    document.querySelector(".content-title").textContent = data.hitokoto;
+                    return;
+                }
+            };
+            ajax("POST","https://v1.hitokoto.cn/").then(function(data){
+                document.querySelector(".content-title").textContent = JSON.parse(data).hitokoto;
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    date: today,
+                    data: JSON.parse(data)
+                }));
+            });
+        };
+
+        function canvasDrawLine(){
+			const cvs=document.getElementById("Skills");
+			const ctx=cvs.getContext("2d");
+			let canvasInit=function(){
+				cvs.width=window.innerWidth;
+				cvs.height=window.innerHeight;
+			};
+			canvasInit();
+			
+			const getRandom=function(min,max){
+				return Math.floor(Math.random() * (max+1-min)+min);
+			};
+			
+			class Point{
+				constructor(){
+					this.r=6;
+					this.x=getRandom(0,cvs.width-this.r/2);
+					this.y=getRandom(0,cvs.height-this.r/2);
+					this.xSpeed=getRandom(-50,50);
+					this.ySpeed=getRandom(-50,50);
+					this.lastDrawTime=null;
+				}
+				draw(){
+					if(this.lastDrawTime){
+						const duration=(Date.now() - this.lastDrawTime)/1000;
+						const xDis=this.xSpeed * duration,yDis=this.ySpeed*duration;
+						let x=this.x + xDis,y=this.y+yDis;
+						if(x>cvs.width - this.r/2){
+							x=cvs.width - this.r/2;
+							this.xSpeed=-this.xSpeed;
+						}else if(x<0){
+							x=0;
+							this.xSpeed=-this.xSpeed
+						};
+						if(y>cvs.height - this.r/2){
+							y=cvs.height - this.r/2;
+							this.ySpeed=-this.ySpeed;
+						}else if(y<0){
+							y=0;
+							this.ySpeed=-this.ySpeed
+						};
+						this.x=x;
+						this.y=y;
+					};
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+					ctx.fillStyle="rgba(220,220,220,1)";
+					ctx.fill();
+					this.lastDrawTime=Date.now();
+				}
+			};
+			
+			class Graph{
+				constructor(pointNumber=40,maxDis=200){
+					this.points=new Array(pointNumber).fill(0).map(()=>new Point());
+					this.maxDis=maxDis;
+				}
+				draw(){
+					requestAnimationFrame(()=>{
+						this.draw();
+					});
+					ctx.clearRect(0,0,cvs.width,cvs.height);
+					for(let i=0;i<this.points.length;i++){
+						const p1 = this.points[i];
+						p1.draw();
+						for(let j=i+1;j<this.points.length;j++){
+							const p2 = this.points[j];
+							const d=Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2);
+							if(d>this.maxDis){
+								continue;
+							};
+							ctx.beginPath();
+							ctx.moveTo(p1.x,p1.y);
+							ctx.lineTo(p2.x,p2.y);
+							ctx.closePath();
+							ctx.strokeStyle=`rgba(220,220,220,${1-d/this.maxDis})`;
+							ctx.stroke();
+						}
+					}
+				}
+			};
+			
+			const g=new Graph();
+			g.draw();
+		};
+    
+        function bindRelatedMe(data) {
+            document.querySelector(".userMe").innerHTML = "";
+            var DOM = document.createDocumentFragment();
+            var imgMe = createTag('div', [['class', 'imgMe']]);
+            var meImage = new Image();
+            meImage.src = "./Resources/img/me/7487d9641b44aa4e5813d2a6759373d4.jpg";
+            meImage.alt = "暂无图片";
+            imgMe.appendChild(meImage);
+            DOM.appendChild(imgMe);
+            
+            for (let i = 0; i < 4; i++) {
+                var icon = createTag("div", [['class', 'icon icon' + (i + 1)]]);
+                var nav = new Image();
+                nav.src = "./Resources/img/home/nav" + (i + 1) + ".png";
+                nav.alt = "暂无图片";
+                var span = createTag("span", null, data[i]?.title || "敬请期待");
+                icon.appendChild(nav);
+                icon.appendChild(span);
+                
+                icon.addEventListener("click", function() {
+                    if(data[i]){
+                        document.querySelector(".userMe").classList.add("select");
+                        document.querySelector(".getBack").style.opacity = 1;
+                        setTimeout(function() {
+                            const label = document.querySelector(".label");
+                            label.innerHTML = data[i].html.join("");
+                            label.style.opacity = 1;
+                            
+                            // 确保label有滚动条时能正常工作
+                            label.style.overflow = 'auto';
+                            
+                            // 标记鼠标是否在label内
+                            let isMouseInsideLabel = false;
+                            
+                            // label的滚轮事件处理
+                            const handleLabelWheel = (e) => {
+                                // 只要在label内，就完全阻止事件冒泡
+                                e.stopPropagation();
+                                e.preventDefault();
+                                
+                                // 手动处理label内部的滚动
+                                const scrollAmount = e.deltaY * 0.5; // 调整滚动速度
+                                label.scrollTop += scrollAmount;
+                            };
+
+                            isMouseInsideLabel = true;
+                            label.addEventListener('wheel', handleLabelWheel);
+                            
+                            // 全局滚轮拦截器（捕获阶段）
+                            const handleGlobalWheel = (e) => {
+                                if (isMouseInsideLabel) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }
+                            };
+                            
+                            // 鼠标进入label时
+                            label.addEventListener('mouseenter', () => {
+                                isMouseInsideLabel = true;
+                                label.addEventListener('wheel', handleLabelWheel);
+                            });
+                            
+                            // 鼠标离开label时
+                            label.addEventListener('mouseleave', () => {
+                                isMouseInsideLabel = false;
+                                label.removeEventListener('wheel', handleLabelWheel);
+                            });
+                            
+                            // 添加全局拦截器（使用捕获阶段确保先执行）
+                            document.addEventListener('wheel', handleGlobalWheel, { capture: true });
+                            
+                            // 清理函数
+                            const cleanup = () => {
+                                label.removeEventListener('wheel', handleLabelWheel);
+                                document.removeEventListener('wheel', handleGlobalWheel, { capture: true });
+                                label.removeEventListener('mouseenter', () => {});
+                                label.removeEventListener('mouseleave', () => {});
+                            };
+                            
+                            // 当关闭label时执行清理
+                            // 你需要根据实际场景添加关闭label的逻辑
+                            // 例如: closeButton.addEventListener('click', cleanup);
+                            
+                        }, 300);
+                    }else{
+                        notification({
+                            title:"提示",
+                            message:"敬请期待！",
+                            type:"warning"
+                        })
+                    }
+                });
+                
+                DOM.appendChild(icon);
+            };
+            
+            document.querySelector(".userMe").appendChild(DOM);
+            document.querySelector(".getBack").addEventListener("click",function(){
+                const label = document.querySelector(".label");
+                label.style.opacity = 0;
+                setTimeout(function(){
+                    document.querySelector(".userMe").classList.remove("select");
+                    document.querySelector(".getBack").style.opacity = 0;
+                    label.innerHTML = "";
+                },300);
+            })
+        }
+    </script>
+</body>
+</html>

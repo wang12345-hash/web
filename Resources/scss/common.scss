@@ -1,0 +1,105 @@
+// ====================================================
+// 弹性布局封装
+// 规则：
+//      .[dir][Justify][Align]          ——> 不含 align-content
+//      .[dir][Justify][Align][Content] ——> 含 align-content
+// ====================================================
+
+// 属性映射表
+$flex-map:(
+    dir:(row,column),
+    justify: (
+        Start: flex-start,
+        End: flex-end,
+        Center: center,
+        Between: space-between,
+        Around: space-around,
+        Evenly: space-evenly
+    ),
+    align: (
+        Start: flex-start,
+        End: flex-end,
+        Center: center,
+        Stretch: stretch,
+        Baseline: baseline
+    )
+);
+// 类名生成器
+@each $dir in map-get($flex-map, dir) {
+    @each $justify-name, $justify-value in map-get($flex-map, justify) {
+        @each $align-name, $align-value in map-get($flex-map, align) {
+
+            // 3段式类名（不含 align-content）
+            .#{$dir}#{$justify-name}#{$align-name} {
+                display: flex;
+                flex-direction: $dir;
+                justify-content: $justify-value;
+                align-items: $align-value;
+            }
+
+            // 4段式类名（含 align-content）
+            @each $content-name, $content-value in map-get($flex-map, align) {
+                .#{$dir}#{$justify-name}#{$align-name}#{$content-name} {
+                @extend .#{$dir}#{$justify-name}#{$align-name};
+                align-content: $content-value;
+                }
+            }
+        }
+    }
+}
+
+@for $i from 1 through 12 {
+    .flex-#{$i}{
+        flex: $i;
+    }
+}
+
+.line-1{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@for $i from 2 through 10 {
+    .line-#{$i}{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: $i;
+        line-clamp: $i;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+    }
+}
+
+.pointer{
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    &:hover{
+        opacity: 0.7;
+    }
+}
+
+@for $i from 1 through 100 {
+    .m-#{$i}{margin: $i + px;}
+    .m-l-#{$i}{margin-left: $i + px;}
+    .m-t-#{$i}{margin-top: $i + px;}
+    .m-r-#{$i}{margin-right: $i + px;}
+    .m-b-#{$i}{margin-bottom: $i + px;}
+    .p-#{$i}{padding: $i + px;}
+    .p-l-#{$i}{padding-left: $i + px;}
+    .p-t-#{$i}{padding-top: $i + px;}
+    .p-r-#{$i}{padding-right: $i + px;}
+    .p-b-#{$i}{padding-bottom: $i + px;}
+    .lineHeight-#{$i} {line-height: $i + px;}
+    .radius-#{$i}{border-radius: $i + px;}
+}
+
+@for $i from 12 through 100 {
+    .font-#{$i}{font-size: $i + px;}
+}
+
+@each $i in (left,center,right) {
+    .text-#{$i}{text-align: $i;}
+}
